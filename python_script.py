@@ -50,9 +50,9 @@ def get_welcome_response():
 
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "Welcome to the my spelling bee app. " \
-                    "Please tell me your favorite color by saying, " \
-                    "my favorite color is red"
+    speech_output = "Welcome to the My Spelling Bee Alexa Skill. " \
+                    "Tell me what to do, or ask me to list your options"\
+                    
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
     reprompt_text = "Please tell me your favorite color by saying, " \
@@ -75,6 +75,18 @@ def handle_session_end_request():
 def create_favorite_color_attributes(favorite_color):
     return {"favoriteColor": favorite_color}
 
+def list_options():
+    cart_title = intent['list']
+    session_attributes = {}
+    should_end_session = False
+
+        "Select from the following options: " \
+                    "Test on some sample words" \
+                    "Add a word to a dictionary" \
+                    "List your dictionaries" \
+                    "Create a dictionary" \
+                    "Create a new dictionary from a webpage" \
+                    "Merge two diction"
 
 def set_color_in_session(intent, session):
     """ Sets the color in the session and prepares the speech to reply to the
