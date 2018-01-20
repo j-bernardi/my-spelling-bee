@@ -32,12 +32,14 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         'shouldEndSession': should_end_session
     }
 
+
 def build_response(session_attributes, speechlet_response):
     return {
         'version': '1.0',
         'sessionAttributes': session_attributes,
         'response': speechlet_response
     }
+
 
 # --------------- Functions that control the skill's behavior ------------------
 
@@ -48,28 +50,17 @@ def get_welcome_response():
 
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "Welcome to my spelling bee. " \
-                    "Do you want me to list your options"
-    
+    speech_output = "Welcome to the My Spelling Bee Alexa Skill. " \
+                    "Tell me your facourite colour"\
+                    
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    
-    reprompt_text = "Tell me what to do or to list your options"
-    
+    reprompt_text = "Please tell me your favorite color by saying, " \
+                    "my favorite color is red."
     should_end_session = False
-    
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
-def list_options(intent, session):
-    
-    session_attributes = {}
-    speech_output = "your options are. ask me to spell a word. list your options. "
-    reprompt_text = speech_output
-    should_end_session = False
-    
-    return build_response(session_attributes, build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
 
 def handle_session_end_request():
     card_title = "Session Ended"
@@ -80,15 +71,7 @@ def handle_session_end_request():
     return build_response({}, build_speechlet_response(
         card_title, speech_output, None, should_end_session))
 
-def sample_test(intent,session):
 
-    session_attributes = {}
-    speech_output = "Spell the word " + intent['slots']['Word']['value']
-    reprompt_text = speech_output
-    should_end_session = False
-    return build_response(session_attributes, build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
-    
 def create_favorite_color_attributes(favorite_color):
     return {"favoriteColor": favorite_color}
 
@@ -119,6 +102,7 @@ def set_color_in_session(intent, session):
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
+
 def get_color_from_session(intent, session):
     session_attributes = {}
     reprompt_text = None
@@ -148,6 +132,7 @@ def on_session_started(session_started_request, session):
     print("on_session_started requestId=" + session_started_request['requestId']
           + ", sessionId=" + session['sessionId'])
 
+
 def on_launch(launch_request, session):
     """ Called when the user launches the skill without specifying what they
     want
@@ -157,6 +142,7 @@ def on_launch(launch_request, session):
           ", sessionId=" + session['sessionId'])
     # Dispatch to your skill's launch
     return get_welcome_response()
+
 
 def on_intent(intent_request, session):
     """ Called when the user specifies an intent for this skill """
@@ -168,25 +154,17 @@ def on_intent(intent_request, session):
     intent_name = intent_request['intent']['name']
 
     # Dispatch to your skill's intent handlers
-    if intent_name == "ListOptions":
-        return list_options(intent, session)
-    elif intent_name == "SpellingTest":
-        return sample_test(intent, session)
-    
-    elif intent_name == "Letter":
-        return letter_said(intent, session)
-    
-    elif intent_name == "MyColorIsIntent":
+    if intent_name == "MyColorIsIntent":
         return set_color_in_session(intent, session)
     elif intent_name == "WhatsMyColorIntent":
         return get_color_from_session(intent, session)
-    
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
         return handle_session_end_request()
     else:
         raise ValueError("Invalid intent")
+
 
 def on_session_ended(session_ended_request, session):
     """ Called when the user ends the session.
@@ -196,6 +174,7 @@ def on_session_ended(session_ended_request, session):
     print("on_session_ended requestId=" + session_ended_request['requestId'] +
           ", sessionId=" + session['sessionId'])
     # add cleanup logic here
+
 
 # --------------- Main handler ------------------
 
