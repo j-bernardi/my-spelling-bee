@@ -97,6 +97,29 @@ def spelling_test(intent,session):
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
+
+def spelling_attempt(intent, session):
+    session_attributes = {}
+    letter = intent['slots']['Letter']['value']
+    counter = session['attributes']['counter']
+    testWord = session['attributes']['testWord']
+    reprompt_text = "" 
+    should_end_session = False
+    
+    if(letter == testWord[counter]):
+        counter+=1
+        session_attributes = {"testWord" : testWord, "counter" : counter}
+        if(counter == testWord.len()):
+            should_end_session = True #Delete me later!
+            speech_output = "Well done. You spelt " + testWord + " correctly."
+        else:
+            speech_output = "Ding"
+    else:
+        should_end_session = True #Delete me later!
+        speech_output = "You spelt " + testWord + " incorrectly."
+    
+    return build_response(session_attributes, build_speechlet_response(intent'name', speech_output, reprompt_text, should_end_session))
+
     
 def create_favorite_color_attributes(favorite_color):
     return {"favoriteColor": favorite_color}
