@@ -193,7 +193,7 @@ def on_intent(intent_request, session):
         return repeat_word(intent,session)
     elif intent_name == "SkipWord":
         return skip_word(intent, session)
-    elif intent_name == "AnyWord":
+    elif intent_name == "SingleWord":
         return any_word(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
