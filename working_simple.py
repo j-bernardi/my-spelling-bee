@@ -87,7 +87,7 @@ def list_options(intent, session):
 
 def handle_session_end_request():
     card_title = "Session Ended"
-    speech_output = "Thank you for trying the Alexa Skills Kit sample. " \
+    speech_output = "Thank you for practicing spelling with me. " \
                     "Have a nice day! "
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
@@ -143,13 +143,11 @@ def spelling_attempt(intent, session):
         session_attributes = {"testWord" : testWord, "counter" : counter}
         
         if counter == len(testWord) :
-            speech_output = "Well done. You spelt " + testWord + " correctly."
-            should_end_session = True #Delete me later!
+            speech_output = "Well done. You spelt " + testWord + " correctly. "
+            return list_options(intent, session)
         else:
             speech_output = "Ding"
     else:
-    
-        should_end_session = False #Delete me later!
         speech_output = "Sorry, " + str(letter).lower() + " is incorrect. You spelt " + testWord + " incorrectly. Say - try me again - if you want to try again, or say - stop."
         session_attributes = {"testWord":testWord, "counter": 0}
     
