@@ -7,7 +7,7 @@ For additional samples, visit the Alexa Skills Kit Getting Started guide at
 http://amzn.to/1LGWsLG
 """
 
-import random
+import random #maybe from random
 
 from __future__ import print_function
 
@@ -90,9 +90,9 @@ def handle_session_end_request():
 
 def spelling_test(intent,session):
 
-    chosenWord = getRandomWord()
-    session_attributes = {}
-    speech_output = "Spell the word " + chosenWord
+    testWord = getRandomWord()
+    session_attributes = {"testWord" : testWord, "counter" : 0}
+    speech_output = "Spell the word " + testWord
     reprompt_text = speech_output
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
