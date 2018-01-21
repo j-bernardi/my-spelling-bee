@@ -78,7 +78,7 @@ def get_welcome_response():
 def list_options(intent, session):
     
     session_attributes = {}
-    speech_output = "Ask me to give you a spelling test. "
+    speech_output = "Ask me to give you a spelling test. Or ask to be tested on a certain word. "
     reprompt_text = speech_output
     should_end_session = False
     
@@ -118,7 +118,13 @@ def skip_word(intent,session):
     return spelling_test(intent,session)
 
 def any_word(intent,session):
-    
+    testWord = intent['slots']['AnyWord']['value']
+    session_attributes = {"testWord" : testWord, "counter" : 0}
+    speech_output = "How do you spell. " + testWord
+    reprompt_text = speech_output
+    should_end_session = False
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
 
 def spelling_attempt(intent, session):
     
@@ -126,8 +132,6 @@ def spelling_attempt(intent, session):
     #the letter
     letter = intent['slots']['Letter']['resolutions']['resolutionsPerAuthority'][0]['values'][0]['value']['id'] 
     #letter = intent['slots']['Letter']['value']
-    
-    
     counter = session['attributes']['counter']
     testWord = session['attributes']['testWord']
     reprompt_text = None 
