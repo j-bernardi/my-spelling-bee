@@ -7,9 +7,15 @@ For additional samples, visit the Alexa Skills Kit Getting Started guide at
 http://amzn.to/1LGWsLG
 """
 
+import random
+
 from __future__ import print_function
 
 words = ["zebra", "xylophone", "dog"]
+
+def getRandomWord():
+    randomInt = random.randint(0,len(words)-1)
+    return words[randomInt]
 
 
 # --------------- Helpers that build all of the responses ----------------------
@@ -82,10 +88,11 @@ def handle_session_end_request():
     return build_response({}, build_speechlet_response(
         card_title, speech_output, None, should_end_session))
 
-def sample_test(intent,session):
+def spelling_test(intent,session):
 
+    chosenWord = getRandomWord()
     session_attributes = {}
-    speech_output = "Spell the word " + intent['slots']['Word']['value']
+    speech_output = "Spell the word " + chosenWord
     reprompt_text = speech_output
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
@@ -173,7 +180,7 @@ def on_intent(intent_request, session):
     if intent_name == "ListOptions":
         return list_options(intent, session)
     elif intent_name == "SpellingTest":
-        return sample_test(intent, session)
+        return spelling_test(intent, session)
     
     elif intent_name == "Letter":
         return letter_said(intent, session)
