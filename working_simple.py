@@ -9,6 +9,8 @@ http://amzn.to/1LGWsLG
 
 from __future__ import print_function
 
+words = ["zebra", "xylophone", "dog"]
+
 
 # --------------- Helpers that build all of the responses ----------------------
 
