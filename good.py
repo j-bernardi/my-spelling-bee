@@ -97,7 +97,7 @@ def handle_session_end_request():
 def spelling_test(intent,session):
 
     testWord = getRandomWord(words)
-    session_attributes = {"testWord" : testWord, "counter" : 0}
+    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : True}
     speech_output = "Say - skip - or spell the word " + testWord
     reprompt_text = speech_output
     should_end_session = False
@@ -106,7 +106,9 @@ def spelling_test(intent,session):
 
 def repeat_word(intent, session) :
     testWord = session['attributes']['testWord']
-    session_attributes = {"testWord" : testWord, "counter" : 0}
+    #when repeating a word you just want to keep the previous value of isSpellingTest
+    isSpellingTest = session['attributes']['isSpellingTest']
+    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : isSpellingTest}
     speech_output = "Let's try again. Spell the word " + testWord
     reprompt_text = speech_output
     should_end_session = False
@@ -119,7 +121,7 @@ def skip_word(intent,session):
 
 def any_word(intent,session):
     testWord = intent['slots']['AnyWord']['value']
-    session_attributes = {"testWord" : testWord, "counter" : 0}
+    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : False}
     speech_output = "How do you spell. " + testWord
     reprompt_text = speech_output
     should_end_session = False
@@ -134,22 +136,27 @@ def spelling_attempt(intent, session):
     #letter = intent['slots']['Letter']['value']
     counter = session['attributes']['counter']
     testWord = session['attributes']['testWord']
+    isSpellingTest = session['attributes']['isSpellingTest']
     reprompt_text = None 
     should_end_session = False
     
     if str(letter).lower() == testWord[counter].lower():
         
         counter = counter + 1
-        session_attributes = {"testWord" : testWord, "counter" : counter}
+        session_attributes = {"testWord" : testWord, "counter" : counter, "isSpellingTest" : isSpellingTest}
         
         if counter == len(testWord) :
             speech_output = "Well done. You spelt " + testWord + " correctly. "
-            return list_options(intent, session)
+            if (isSpellingTest):
+                return spelling_test(intent, session)
+            else:
+                return list_options(intent, session)
         else:
             speech_output = "Ding"
     else:
-        speech_output = "Sorry, " + str(letter).lower() + " is incorrect. You spelt " + testWord + " incorrectly. Say - try me again - if you want to try again, or say - stop."
-        session_attributes = {"testWord":testWord, "counter": 0}
+        #I've changed try me again to try again, change this if it's causing issues
+        speech_output = "Sorry, " + str(letter).lower() + " is incorrect. You spelt " + testWord + " incorrectly. Say - try again - if you want to try again, or say - stop."
+        session_attributes = {"testWord":testWord, "counter": 0, "isSpellingTest" : isSpellingTest}
     
     return build_response(session_attributes, build_speechlet_response(intent['name'], speech_output, reprompt_text, should_end_session))
 
