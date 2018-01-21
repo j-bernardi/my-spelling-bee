@@ -141,7 +141,9 @@ def get_color_from_session(intent, session):
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
-
+def spelling_attempt(intent, session):
+    letter = intent['slots']['Letter']['value']
+    counter = session['attributes']['counter']
 # --------------- Events ------------------
 
 def on_session_started(session_started_request, session):
@@ -174,6 +176,9 @@ def on_intent(intent_request, session):
         return list_options(intent, session)
     elif intent_name == "SpellingTest":
         return sample_test(intent, session)
+    
+    elif intent_name == "SpellingAttemptIntent":
+        return spelling_attempt(intent, session)
     
     elif intent_name == "Letter":
         return letter_said(intent, session)
