@@ -6,8 +6,39 @@ as testing instructions are located at http://amzn.to/1LzFrj6
 For additional samples, visit the Alexa Skills Kit Getting Started guide at
 http://amzn.to/1LGWsLG
 """
-
 from __future__ import print_function
+import random
+import urllib2
+
+word_site = "http://svnweb.freebsd.org/csrg/share/dict/words?view=co&content-type=text/plain"
+dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+# --------------------- read the words from whichever dictionary ----------------
+
+def getDictionary(word_site):
+    response = urllib2.urlopen(word_site)
+    txt = response.read()
+    return txt.splitlines()
+
+def getRandomWord(words):
+    randomInt = random.randint(0,len(words)-1)
+    return words[randomInt]
+
+def getList(table, key):
+    words = []
+    
+    response = dynamodb.scan(
+        TableName='SpellingList',
+        AttributesToGet=[
+            'word'
+        ],
+        Select='ALL_ATTRIBUTES',
+        ProjectionExpression='word'
+        )
+    for idx, item in enumerate(response['Items']):
+        words.append(item[key])
+    return words
+
+words = getDictionary(word_site)
 
 
 # --------------- Helpers that build all of the responses ----------------------
@@ -64,12 +95,27 @@ def get_welcome_response():
 def list_options(intent, session):
     
     session_attributes = {}
-    speech_output = "your options are. ask me to spell a word. list your options. "
+    speech_output = "Ask me to give you a spelling test. Ask me to test you on your dictionary. Add new words to your dictionary. Remove words from your diionary. "
     reprompt_text = speech_output
     should_end_session = False
     
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
+
+############ NEW ##############
+
+def add_word(intent, session) :
+    pass
+
+def delete_word(intent, session) :
+    pass
+
+def test_on_list(intent, session):
+    
+    words = getList('SpellingList', 'word')
+    return spelling_test(intent,session)
+
+################################
 
 def handle_session_end_request():
     card_title = "Session Ended"
@@ -80,69 +126,59 @@ def handle_session_end_request():
     return build_response({}, build_speechlet_response(
         card_title, speech_output, None, should_end_session))
 
-def sample_test(intent,session):
+def spelling_test(intent,session):
 
-    session_attributes = {}
-    speech_output = "Spell the word " + intent['slots']['Word']['value']
+    testWord = getRandomWord(words)
+    session_attributes = {"testWord" : testWord, "counter" : 0}
+    speech_output = "Say - skip - or spell the word " + testWord
     reprompt_text = speech_output
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
-    
-def create_favorite_color_attributes(favorite_color):
-    return {"favoriteColor": favorite_color}
 
-def set_color_in_session(intent, session):
-    """ Sets the color in the session and prepares the speech to reply to the
-    user.
-    """
-
-    card_title = intent['name']
-    session_attributes = {}
+def repeat_word(intent, session) :
+    testWord = session['attributes']['testWord']
+    session_attributes = {"testWord" : testWord, "counter" : 0}
+    speech_output = "Let's try again. Spell the word " + testWord
+    reprompt_text = speech_output
     should_end_session = False
-
-    if 'Color' in intent['slots']:
-        favorite_color = intent['slots']['Color']['value']
-        session_attributes = create_favorite_color_attributes(favorite_color)
-        speech_output = "I now know your favorite color is " + \
-                        favorite_color + \
-                        ". You can ask me your favorite color by saying, " \
-                        "what's my favorite color?"
-        reprompt_text = "You can ask me your favorite color by saying, " \
-                        "what's my favorite color?"
-    else:
-        speech_output = "I'm not sure what your favorite color is. " \
-                        "Please try again."
-        reprompt_text = "I'm not sure what your favorite color is. " \
-                        "You can tell me your favorite color by saying, " \
-                        "my favorite color is red."
-    return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
-
-def get_color_from_session(intent, session):
-    session_attributes = {}
-    reprompt_text = None
-
-    if session.get('attributes', {}) and "favoriteColor" in session.get('attributes', {}):
-        favorite_color = session['attributes']['favoriteColor']
-        speech_output = "Your favorite color is " + favorite_color + \
-                        ". Goodbye."
-        should_end_session = True
-    else:
-        speech_output = "I'm not sure what your favorite color is. " \
-                        "You can say, my favorite color is red."
-        should_end_session = False
-
-    # Setting reprompt_text to None signifies that we do not want to reprompt
-    # the user. If the user does not respond or says something that is not
-    # understood, the session will end.
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
-# --------------- List Stuff --------------
+def skip_word(intent,session):
 
-def add_word(intent,session):
-	
+    return spelling_test(intent,session)
+
+def spelling_attempt(intent, session):
+    
+    session_attributes = {}
+    #the letter
+    letter = intent['slots']['Letter']['resolutions']['resolutionsPerAuthority'][0]['values'][0]['value']['id'] 
+    #letter = intent['slots']['Letter']['value']
+    
+    
+    counter = session['attributes']['counter']
+    testWord = session['attributes']['testWord']
+    reprompt_text = None 
+    should_end_session = False
+    
+    if str(letter).lower() == testWord[counter].lower():
+        
+        counter = counter + 1
+        session_attributes = {"testWord" : testWord, "counter" : counter}
+        
+        if counter == len(testWord) :
+            speech_output = "Well done. You spelt " + testWord + " correctly."
+            should_end_session = True #Delete me later!
+        else:
+            speech_output = "Ding"
+    else:
+    
+        should_end_session = False #Delete me later!
+        speech_output = "Sorry, " + str(letter).lower() + " is incorrect. You spelt " + testWord + " incorrectly. Say - try me again - if you want to try again, or say - stop."
+        session_attributes = {"testWord":testWord, "counter": 0}
+    
+    return build_response(session_attributes, build_speechlet_response(intent['name'], speech_output, reprompt_text, should_end_session))
 
 # --------------- Events ------------------
 
@@ -174,25 +210,22 @@ def on_intent(intent_request, session):
     # Dispatch to your skill's intent handlers
     if intent_name == "ListOptions":
         return list_options(intent, session)
-    
-
-
-    elif intent_name == "AddWord":
-    	return add_word(intent,session)
-
-
-
     elif intent_name == "SpellingTest":
-        return sample_test(intent, session)
-    
-    elif intent_name == "Letter":
-        return letter_said(intent, session)
-    
-    elif intent_name == "MyColorIsIntent":
-        return set_color_in_session(intent, session)
-    elif intent_name == "WhatsMyColorIntent":
-        return get_color_from_session(intent, session)
-    
+        return spelling_test(intent, session)
+    elif intent_name == "SpellingAttemptIntent":
+        return spelling_attempt(intent, session)
+    elif intent_name == "AddNewWord":
+        return add_word(intent,session)
+    elif intent_name == "DeleteWord":
+        return delete_word(intent,session)
+    elif intent_name == "ListTest":
+        return test_on_list(intent,session)
+    elif intent_name == "AgainIntent" :
+        return repeat_word(intent,session)
+    elif intent_name == "SkipWord":
+        return skip_word(intent, session)
+    elif intent_name == "SingleWord":
+        return any_word(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":

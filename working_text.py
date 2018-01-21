@@ -6,8 +6,14 @@ as testing instructions are located at http://amzn.to/1LzFrj6
 For additional samples, visit the Alexa Skills Kit Getting Started guide at
 http://amzn.to/1LGWsLG
 """
-
 from __future__ import print_function
+import random #maybe from random
+
+words = ["something", "bravo", "right", "hangover", "sleepy"]
+
+def getRandomWord(words):
+    randomInt = random.randint(0,len(words)-1)
+    return words[randomInt]
 
 
 # --------------- Helpers that build all of the responses ----------------------
@@ -64,7 +70,7 @@ def get_welcome_response():
 def list_options(intent, session):
     
     session_attributes = {}
-    speech_output = "your options are. ask me to spell a word. list your options. "
+    speech_output = "Ask me to give you a spelling test. "
     reprompt_text = speech_output
     should_end_session = False
     
@@ -80,15 +86,43 @@ def handle_session_end_request():
     return build_response({}, build_speechlet_response(
         card_title, speech_output, None, should_end_session))
 
-def sample_test(intent,session):
+def spelling_test(intent,session):
 
-    session_attributes = {}
-    speech_output = "Spell the word " + intent['slots']['Word']['value']
+    testWord = getRandomWord(words)
+    session_attributes = {"testWord" : testWord, "counter" : 0}
+    speech_output = "Spell the word " + testWord
     reprompt_text = speech_output
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
+
+def spelling_attempt(intent, session):
     
+    session_attributes = {}
+    #the letter
+    letter = intent['slots']['Letter']['resolutions']['resolutionsPerAuthority'][0]['values'][0]['value']['id'] 
+    #letter = intent['slots']['Letter']['value']
+    counter = session['attributes']['counter']
+    testWord = session['attributes']['testWord']
+    reprompt_text = None 
+    should_end_session = False
+    
+    if str(letter).lower() == testWord[counter].lower():
+        
+        counter = counter + 1
+        session_attributes = {"testWord" : testWord, "counter" : counter}
+        
+        if counter == len(testWord) :
+            speech_output = "Well done. You spelt " + testWord + " correctly."
+            should_end_session = True #Delete me later!
+        else:
+            speech_output = "Ding"
+    else:
+        should_end_session = True #Delete me later!
+        speech_output = "Sorry, " + str(letter).lower() + " is incorrect. You spelt " + testWord + " incorrectly."
+    
+    return build_response(session_attributes, build_speechlet_response(intent['name'], speech_output, reprompt_text, should_end_session))
+
 def create_favorite_color_attributes(favorite_color):
     return {"favoriteColor": favorite_color}
 
@@ -139,11 +173,6 @@ def get_color_from_session(intent, session):
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
-# --------------- List Stuff --------------
-
-def add_word(intent,session):
-	
-
 # --------------- Events ------------------
 
 def on_session_started(session_started_request, session):
@@ -174,25 +203,14 @@ def on_intent(intent_request, session):
     # Dispatch to your skill's intent handlers
     if intent_name == "ListOptions":
         return list_options(intent, session)
-    
-
-
-    elif intent_name == "AddWord":
-    	return add_word(intent,session)
-
-
-
     elif intent_name == "SpellingTest":
-        return sample_test(intent, session)
-    
-    elif intent_name == "Letter":
-        return letter_said(intent, session)
-    
+        return spelling_test(intent, session)
+    elif intent_name == "SpellingAttemptIntent":
+        return spelling_attempt(intent, session)
     elif intent_name == "MyColorIsIntent":
         return set_color_in_session(intent, session)
     elif intent_name == "WhatsMyColorIntent":
         return get_color_from_session(intent, session)
-    
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
