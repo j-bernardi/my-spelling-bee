@@ -9,6 +9,8 @@ http://amzn.to/1LGWsLG
 
 from __future__ import print_function
 
+words = ["zebra", "xylophone", "dog"]
+
 
 # --------------- Helpers that build all of the responses ----------------------
 
@@ -139,6 +141,28 @@ def get_color_from_session(intent, session):
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
+def spelling_attempt(intent, session):
+    session_attributes = {}
+    letter = intent['slots']['Letter']['value']
+    counter = session['attributes']['counter']
+    testWord = session['attributes']['testWord']
+    reprompt_text = "" 
+    should_end_session = False
+    
+    if(letter == testWord[counter]):
+        counter+=1
+        session_attributes = {"testWord" : testWord, "counter" : counter}
+        if(counter == testWord.len()):
+            should_end_session = True #Delete me later!
+            speech_output = "Well done. You spelt " + testWord + " correctly."
+        else:
+            speech_output = "Ding"
+    else:
+        should_end_session = True #Delete me later!
+        speech_output = "You spelt " + testWord + " incorrectly."
+    
+    return build_response(session_attributes, build_speechlet_response(intent'name', speech_output, reprompt_text, should_end_session))
+
 
 # --------------- Events ------------------
 
@@ -172,6 +196,9 @@ def on_intent(intent_request, session):
         return list_options(intent, session)
     elif intent_name == "SpellingTest":
         return sample_test(intent, session)
+    
+    elif intent_name == "SpellingAttemptIntent":
+        return spelling_attempt(intent, session)
     
     elif intent_name == "Letter":
         return letter_said(intent, session)
