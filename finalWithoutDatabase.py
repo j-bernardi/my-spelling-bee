@@ -68,7 +68,7 @@ def get_welcome_response():
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
     
-    reprompt_text = "Tell me what to do or to list your options"
+    reprompt_text = "Tell me what to do or tell me to list your options"
     
     should_end_session = False
     
@@ -87,10 +87,14 @@ def list_options(intent, session):
 
 def handle_session_end_request(session):
     streak = session['attributes']['streak']
+    if (streak == 1):
+        word = "word."
+    else:
+        word = "words."
     card_title = "Session Ended"
     speech_output = "Thank you for practicing spelling with me. " \
-                    "Your last streak was " + str(streak) + " words. " \
-                    "Have a nice day! "
+                    "Your last streak was " + str(streak) + " " + word \
+                    + " Have a nice day! "
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
     return build_response({}, build_speechlet_response(
@@ -122,8 +126,12 @@ def repeat_word(intent, session) :
 def skip_word(intent,session):
     testWord = getRandomWord(words)
     streak = session['attributes']['streak']
+    if (streak == 1):
+        word = "word."
+    else:
+        word = "words."
     session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : True, "streak" : 0}
-    speech_output = "Your last streak was " + str(streak) + " words. Say - skip - or spell the word " + testWord
+    speech_output = "Your last streak was " + str(streak) + " " +  word + " Say - skip - or spell the word " + testWord
     reprompt_text = speech_output
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
