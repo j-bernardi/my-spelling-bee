@@ -60,7 +60,7 @@ def get_welcome_response():
     add those here
     """
 
-    session_attributes = {}
+    session_attributes = {"streak" : 0}
     card_title = "Welcome"
     speech_output = "Welcome to my spelling bee. " \
                     "Do you want me to list your options"
@@ -77,7 +77,7 @@ def get_welcome_response():
 
 def list_options(intent, session):
     
-    session_attributes = {}
+    session_attributes = {"streak" : 0}
     speech_output = "Ask me to give you a spelling test. Or ask to be tested on a certain word. "
     reprompt_text = speech_output
     should_end_session = False
@@ -85,9 +85,11 @@ def list_options(intent, session):
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
-def handle_session_end_request():
+def handle_session_end_request(session):
+    streak = session['attributes']['streak']
     card_title = "Session Ended"
     speech_output = "Thank you for practicing spelling with me. " \
+                    "Your last streak was " + str(streak) + " words. " \
                     "Have a nice day! "
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
@@ -97,7 +99,8 @@ def handle_session_end_request():
 def spelling_test(intent,session):
 
     testWord = getRandomWord(words)
-    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : True}
+    streak = session['attributes']['streak']
+    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : True, "streak" : streak}
     speech_output = "Say - skip - or spell the word " + testWord
     reprompt_text = speech_output
     should_end_session = False
@@ -108,20 +111,27 @@ def repeat_word(intent, session) :
     testWord = session['attributes']['testWord']
     #when repeating a word you just want to keep the previous value of isSpellingTest
     isSpellingTest = session['attributes']['isSpellingTest']
-    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : isSpellingTest}
-    speech_output = "Let's try again. Spell the word " + testWord
+    streak = session['attributes']['streak']
+    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : isSpellingTest, "streak" : streak}
+    speech_output = "Let's try again. Say -skip- or spell the word " + testWord
     reprompt_text = speech_output
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
 def skip_word(intent,session):
-
-    return spelling_test(intent,session)
+    testWord = getRandomWord(words)
+    streak = session['attributes']['streak']
+    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : True, "streak" : 0}
+    speech_output = "Your last streak was " + str(streak) + " words. Say - skip - or spell the word " + testWord
+    reprompt_text = speech_output
+    should_end_session = False
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
 
 def any_word(intent,session):
     testWord = intent['slots']['AnyWord']['value']
-    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : False}
+    session_attributes = {"testWord" : testWord, "counter" : 0, "isSpellingTest" : False, "streak" : 0}
     speech_output = "How do you spell. " + testWord
     reprompt_text = speech_output
     should_end_session = False
@@ -137,27 +147,29 @@ def spelling_attempt(intent, session):
     counter = session['attributes']['counter']
     testWord = session['attributes']['testWord']
     isSpellingTest = session['attributes']['isSpellingTest']
+    streak = session['attributes']['streak'] 
     reprompt_text = None 
     should_end_session = False
     
     if str(letter).lower() == testWord[counter].lower():
         
         counter = counter + 1
-        session_attributes = {"testWord" : testWord, "counter" : counter, "isSpellingTest" : isSpellingTest}
+        #session_attributes = {"testWord" : testWord, "counter" : counter, "isSpellingTest" : isSpellingTest, "streak" : streak}
         
         if counter == len(testWord) :
-            speech_output = "Well done. You spelt " + testWord + " correctly. "
+            streak = streak + 1
+            speech_output = "Well done. You spelt " + testWord + " correctly."
             if (isSpellingTest):
-                return spelling_test(intent, session)
+                speech_output = speech_output + " Say. Next word. When you're ready for another word."
             else:
                 return list_options(intent, session)
         else:
             speech_output = "Ding"
     else:
         #I've changed try me again to try again, change this if it's causing issues
-        speech_output = "Sorry, " + str(letter).lower() + " is incorrect. You spelt " + testWord + " incorrectly. Say - try again - if you want to try again, or say - stop."
-        session_attributes = {"testWord":testWord, "counter": 0, "isSpellingTest" : isSpellingTest}
-    
+        speech_output = "Sorry, " + str(letter).lower() + " is incorrect. You spelt " + testWord + " incorrectly. Say - try me again - if you want to try again, or say - stop."
+        counter = 0
+    session_attributes = {"testWord" : testWord, "counter" : counter, "isSpellingTest" : isSpellingTest, "streak" : streak}
     return build_response(session_attributes, build_speechlet_response(intent['name'], speech_output, reprompt_text, should_end_session))
 
 # --------------- Events ------------------
@@ -191,6 +203,7 @@ def on_intent(intent_request, session):
     if intent_name == "ListOptions":
         return list_options(intent, session)
     elif intent_name == "SpellingTest":
+        
         return spelling_test(intent, session)
     elif intent_name == "SpellingAttemptIntent":
         return spelling_attempt(intent, session)
@@ -203,7 +216,7 @@ def on_intent(intent_request, session):
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
-        return handle_session_end_request()
+        return handle_session_end_request(session)
     else:
         raise ValueError("Invalid intent")
 
