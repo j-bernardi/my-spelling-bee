@@ -78,7 +78,7 @@ def get_welcome_response():
 def list_options(intent, session):
     
     session_attributes = {}
-    speech_output = "Ask me to give you a spelling test. "
+    speech_output = "Ask me to give you a spelling test. Or ask to be tested on a certain word. "
     reprompt_text = speech_output
     should_end_session = False
     
@@ -87,7 +87,7 @@ def list_options(intent, session):
 
 def handle_session_end_request():
     card_title = "Session Ended"
-    speech_output = "Thank you for trying the Alexa Skills Kit sample. " \
+    speech_output = "Thank you for practicing spelling with me. " \
                     "Have a nice day! "
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
@@ -117,14 +117,21 @@ def skip_word(intent,session):
 
     return spelling_test(intent,session)
 
+def any_word(intent,session):
+    testWord = intent['slots']['AnyWord']['value']
+    session_attributes = {"testWord" : testWord, "counter" : 0}
+    speech_output = "How do you spell. " + testWord
+    reprompt_text = speech_output
+    should_end_session = False
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
+
 def spelling_attempt(intent, session):
     
     session_attributes = {}
     #the letter
     letter = intent['slots']['Letter']['resolutions']['resolutionsPerAuthority'][0]['values'][0]['value']['id'] 
     #letter = intent['slots']['Letter']['value']
-    
-    
     counter = session['attributes']['counter']
     testWord = session['attributes']['testWord']
     reprompt_text = None 
@@ -186,6 +193,8 @@ def on_intent(intent_request, session):
         return repeat_word(intent,session)
     elif intent_name == "SkipWord":
         return skip_word(intent, session)
+    elif intent_name == "SingleWord":
+        return any_word(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
