@@ -12,8 +12,6 @@ import urllib2
 
 word_site = "http://svnweb.freebsd.org/csrg/share/dict/words?view=co&content-type=text/plain"
 
-words = getDictionary(word_site)
-
 def getDictionary(word_site):
     response = urllib2.urlopen(word_site)
     txt = response.read()
@@ -22,6 +20,8 @@ def getDictionary(word_site):
 def getRandomWord(words):
     randomInt = random.randint(0,len(words)-1)
     return words[randomInt]
+    
+words = getDictionary(word_site)
 
 
 # --------------- Helpers that build all of the responses ----------------------
@@ -95,10 +95,10 @@ def handle_session_end_request():
         card_title, speech_output, None, should_end_session))
 
 def spelling_test(intent,session):
-    
+
     testWord = getRandomWord(words)
     session_attributes = {"testWord" : testWord, "counter" : 0}
-    speech_output = "Spell the word " + testWord
+    speech_output = "Say - skip - or spell the word " + testWord
     reprompt_text = speech_output
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
@@ -112,7 +112,14 @@ def repeat_word(intent, session) :
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
-        
+
+def skip_word(intent,session):
+
+    return spelling_test(intent,session)
+
+def any_word(intent,session):
+    
+
 def spelling_attempt(intent, session):
     
     session_attributes = {}
@@ -180,6 +187,10 @@ def on_intent(intent_request, session):
         return spelling_attempt(intent, session)
     elif intent_name == "AgainIntent" :
         return repeat_word(intent,session)
+    elif intent_name == "SkipWord":
+        return skip_word(intent, session)
+    elif intent_name == "AnyWord":
+        return any_word(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
