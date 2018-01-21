@@ -1,0 +1,648 @@
+{
+  "languageModel": {
+    "types": [
+      {
+        "name": "ANY_WORD",
+        "values": [
+          {
+            "id": null,
+            "name": {
+              "value": "banana",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "manoeuvre",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "xylophone",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "bread",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "dog",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "cat",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "tree",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "lion",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "jelly",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "yoyo",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "pogo",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "plant",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "roar",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "cry",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "live",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "fly",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "beautiful",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "wonderful",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "marvellous",
+              "synonyms": []
+            }
+          }
+        ]
+      },
+      {
+        "name": "LIST_OF_LETTERS",
+        "values": [
+          {
+            "id": "a",
+            "name": {
+              "value": "a.",
+              "synonyms": [
+                "a",
+                "ay",
+                "alpha",
+                "a."
+              ]
+            }
+          },
+          {
+            "id": "b",
+            "name": {
+              "value": "b.",
+              "synonyms": [
+                "bee",
+                "bea",
+                "be",
+                "bravo",
+                "b."
+              ]
+            }
+          },
+          {
+            "id": "c",
+            "name": {
+              "value": "c.",
+              "synonyms": [
+                "see",
+                "se",
+                "ce",
+                "c",
+                "cee",
+                "charlie",
+                "charley",
+                "c."
+              ]
+            }
+          },
+          {
+            "id": "d",
+            "name": {
+              "value": "d.",
+              "synonyms": [
+                "dee",
+                "dea",
+                "de",
+                "delta",
+                "d."
+              ]
+            }
+          },
+          {
+            "id": "e",
+            "name": {
+              "value": "e.",
+              "synonyms": [
+                "ee",
+                "e",
+                "epsilon",
+                "echo",
+                "e."
+              ]
+            }
+          },
+          {
+            "id": "f",
+            "name": {
+              "value": "f.",
+              "synonyms": [
+                "eff",
+                "ef",
+                "foxtrot",
+                "f."
+              ]
+            }
+          },
+          {
+            "id": "g",
+            "name": {
+              "value": "g.",
+              "synonyms": [
+                "gee",
+                "ge",
+                "jee",
+                "golf",
+                "g."
+              ]
+            }
+          },
+          {
+            "id": "h",
+            "name": {
+              "value": "h.",
+              "synonyms": [
+                "aitch",
+                "haitch",
+                "hotel",
+                "h."
+              ]
+            }
+          },
+          {
+            "id": "l",
+            "name": {
+              "value": "l.",
+              "synonyms": [
+                "el",
+                "ell",
+                "lima",
+                "lemur",
+                "l."
+              ]
+            }
+          },
+          {
+            "id": "j",
+            "name": {
+              "value": "j.",
+              "synonyms": [
+                "jay",
+                "juliet",
+                "j."
+              ]
+            }
+          },
+          {
+            "id": "k",
+            "name": {
+              "value": "k.",
+              "synonyms": [
+                "kay",
+                "kilo",
+                "kappa",
+                "k."
+              ]
+            }
+          },
+          {
+            "id": "i",
+            "name": {
+              "value": "i.",
+              "synonyms": [
+                "eye",
+                "aye",
+                "i",
+                "india",
+                "igloo",
+                "i."
+              ]
+            }
+          },
+          {
+            "id": "m",
+            "name": {
+              "value": "m.",
+              "synonyms": [
+                "em",
+                "emm",
+                "mother",
+                "mike",
+                "m."
+              ]
+            }
+          },
+          {
+            "id": "n",
+            "name": {
+              "value": "n.",
+              "synonyms": [
+                "en",
+                "enn",
+                "november",
+                "noddy",
+                "n."
+              ]
+            }
+          },
+          {
+            "id": "o",
+            "name": {
+              "value": "o.",
+              "synonyms": [
+                "oh",
+                "owe",
+                "o",
+                "oscar",
+                "oliver",
+                "o."
+              ]
+            }
+          },
+          {
+            "id": "p",
+            "name": {
+              "value": "p.",
+              "synonyms": [
+                "pee",
+                "pea",
+                "pappa",
+                "papa",
+                "p."
+              ]
+            }
+          },
+          {
+            "id": "q",
+            "name": {
+              "value": "q.",
+              "synonyms": [
+                "queue",
+                "que",
+                "cue",
+                "qebec",
+                "quebec",
+                "q."
+              ]
+            }
+          },
+          {
+            "id": "r",
+            "name": {
+              "value": "r.",
+              "synonyms": [
+                "are",
+                "ar",
+                "arr",
+                "romeo",
+                "r."
+              ]
+            }
+          },
+          {
+            "id": "s",
+            "name": {
+              "value": "s.",
+              "synonyms": [
+                "ess",
+                "es",
+                "sierra",
+                "siera",
+                "s."
+              ]
+            }
+          },
+          {
+            "id": "t",
+            "name": {
+              "value": "t.",
+              "synonyms": [
+                "tee",
+                "tea",
+                "te",
+                "tango",
+                "t."
+              ]
+            }
+          },
+          {
+            "id": "u",
+            "name": {
+              "value": "u.",
+              "synonyms": [
+                "You",
+                "you",
+                "ewe",
+                "uniform",
+                "u."
+              ]
+            }
+          },
+          {
+            "id": "v",
+            "name": {
+              "value": "v.",
+              "synonyms": [
+                "vee",
+                "ve",
+                "victor",
+                "v."
+              ]
+            }
+          },
+          {
+            "id": "w",
+            "name": {
+              "value": "w.",
+              "synonyms": [
+                "double-u",
+                "double you",
+                "double u",
+                "double-you",
+                "whiskey",
+                "whisky",
+                "w."
+              ]
+            }
+          },
+          {
+            "id": "x",
+            "name": {
+              "value": "x.",
+              "synonyms": [
+                "ex",
+                "exe",
+                "x-ray",
+                "x."
+              ]
+            }
+          },
+          {
+            "id": "y",
+            "name": {
+              "value": "y.",
+              "synonyms": [
+                "why",
+                "wy",
+                "yankee",
+                "y."
+              ]
+            }
+          },
+          {
+            "id": "z",
+            "name": {
+              "value": "z.",
+              "synonyms": [
+                "zed",
+                "zee",
+                "zulu",
+                "z."
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "intents": [
+      {
+        "name": "AgainIntent",
+        "samples": [
+          "try me again",
+          "try me again please",
+          "please try me again"
+        ],
+        "slots": []
+      },
+      {
+        "name": "AMAZON.CancelIntent",
+        "samples": [
+          "cancel ",
+          "alexa cancel"
+        ]
+      },
+      {
+        "name": "AMAZON.HelpIntent",
+        "samples": [
+          "help me",
+          "help"
+        ]
+      },
+      {
+        "name": "AMAZON.StopIntent",
+        "samples": [
+          "stop",
+          "alexa stop"
+        ]
+      },
+      {
+        "name": "ListOptions",
+        "samples": [
+          "list my options",
+          "list options",
+          "yes",
+          "yes list my options",
+          "list my options please",
+          "yes list my options please",
+          "options please",
+          "yes please",
+          "list options please",
+          "yeah",
+          "yup",
+          "indeed",
+          "indeedy",
+          "list",
+          "options",
+          "give me my list options",
+          "give me my lift options please",
+          "please give me my list options",
+          "yeah please",
+          "uh huh"
+        ],
+        "slots": []
+      },
+      {
+        "name": "SingleWord",
+        "samples": [
+          "test me on {AnyWord}",
+          "i want to spell {AnyWord}",
+          "test {AnyWord}",
+          "test my spelling of {AnyWord}",
+          "test me on the spelling of {AnyWord}",
+          "test my spelling {AnyWord}",
+          "spell {AnyWord}",
+          "spelling of {AnyWord}",
+          "test spell {AnyWord}",
+          "test me on how to spell {AnyWord}",
+          "test me on {AnyWord} please",
+          "i want to spell {AnyWord} please",
+          "test {AnyWord} please",
+          "test my spelling of {AnyWord} please",
+          "test me on the spelling of {AnyWord} please",
+          "test my spelling {AnyWord} please",
+          "spell {AnyWord} please",
+          "spelling of {AnyWord} please",
+          "test spell {AnyWord} please",
+          "test me on how to spell {AnyWord} please"
+        ],
+        "slots": [
+          {
+            "name": "AnyWord",
+            "type": "ANY_WORD"
+          }
+        ]
+      },
+      {
+        "name": "SkipWord",
+        "samples": [
+          "skip",
+          "skip this",
+          "skip this word",
+          "skip this one",
+          "skip that",
+          "skip that one",
+          "skip that word",
+          "skip my word",
+          "skip the word",
+          "i want to skip this word",
+          "i would  like to skip this word",
+          "i want to skip",
+          "please could i skip",
+          "please could i skip this word",
+          "please i want to skip",
+          "skip please",
+          "skip that word please",
+          "skip my word please",
+          "skip the word please",
+          "i want to skip this word please",
+          "i would like to skip this word please",
+          "i want to skip please",
+          "please skip"
+        ],
+        "slots": []
+      },
+      {
+        "name": "SpellingAttemptIntent",
+        "samples": [
+          "{Letter}"
+        ],
+        "slots": [
+          {
+            "name": "Letter",
+            "type": "LIST_OF_LETTERS"
+          }
+        ]
+      },
+      {
+        "name": "SpellingTest",
+        "samples": [
+          "test my spelling",
+          "test spelling",
+          "test me on my spelling",
+          "give me a spelling test",
+          "next word",
+          "give me a spelling test please",
+          "please give me a spelling test",
+          "can i have a spelling test",
+          "can i have a spelling test please",
+          "please can i have a spelling test",
+          "test my spelling please",
+          "please test my spelling",
+          "test spelling please",
+          "please test spellin",
+          "next word please",
+          "test me on my spelling please",
+          "please test me on my spelling",
+          "spelling test",
+          "spelling test please",
+          "please spelling test",
+          "alexa give me a spelling test",
+          "alexa give me a spelling test please",
+          "alexa please give me a spelling test",
+          "test me on spelling",
+          "test me on spelling please",
+          "please test me on spelling"
+        ],
+        "slots": []
+      }
+    ],
+    "invocationName": "my spelling bee"
+  }
+}
