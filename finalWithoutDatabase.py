@@ -175,7 +175,7 @@ def spelling_attempt(intent, session):
             speech_output = "Ding"
     else:
         #I've changed try me again to try again, change this if it's causing issues
-        speech_output = "Sorry, " + str(letter).lower() + " is incorrect. You spelt " + testWord + " incorrectly. You can now - stop - - skip - or - try me again."
+        speech_output = "Sorry, " + str(letter).lower() + " is incorrect. You spelt " + testWord + " incorrectly. You can now - stop - skip - or - try me again."
         counter = 0
     session_attributes = {"testWord" : testWord, "counter" : counter, "isSpellingTest" : isSpellingTest, "streak" : streak}
     return build_response(session_attributes, build_speechlet_response(intent['name'], speech_output, reprompt_text, should_end_session))
